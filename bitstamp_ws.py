@@ -1,9 +1,27 @@
-import websocket
+import json
 import ssl
 
 import datetime
+import websocket
+import bitstamp.client
 
-import json
+import credenciais
+
+def cliente():
+    return bitstamp.client.Trading( username=credenciais.USERNAME,
+                                    key=credenciais.KEY,
+                                    secret=credenciais.SECRET)
+
+
+def comprar(quantidade):
+    trading_client = cliente()
+    trading_client.buy_market_order(quantidade)
+
+
+def vender(quantidade):
+    trading_client = cliente()
+    trading_client.sell_market_order(quantidade)
+
 
 def ao_abrir(ws):
    print('Conexão aberta')
@@ -20,13 +38,6 @@ def ao_abrir(ws):
 def ao_fechar(ws, close_status_code, close_msg):
     print(f'{close_status_code} fechado {close_msg}')
 
-def comprar():
-     pass
-
-
-def vender():
-      pass
-
 
 def ao_receber_mensagem(ws, mensagem):
     try:
@@ -37,11 +48,11 @@ def ao_receber_mensagem(ws, mensagem):
             datetime_object = datetime.datetime.fromtimestamp(timestamp)
             print(f"Preço do BTC/USD: ${price:.2f}, {datetime_object}")
 
-            if price > 100500:
-               vender()
+            if price > 1056.67:
+               vender(0.001)
 
-            elif price < 91000:
-               comprar()
+            elif price < 938.46:
+               comprar(0.001)
 
             else:
                print('aguardar...')
