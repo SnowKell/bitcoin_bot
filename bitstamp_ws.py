@@ -35,11 +35,10 @@ def ao_abrir(ws):
 """
    ws.send(json_subscribe)
 
-def ao_fechar(ws, close_status_code, close_msg):
+def ao_fechar(_ws, close_status_code, close_msg):
     print(f'{close_status_code} fechado {close_msg}')
 
-
-def ao_receber_mensagem(ws, mensagem):
+def ao_receber_mensagem(_ws, mensagem):
     try:
         mensagem = json.loads(mensagem)
         if mensagem.get("event") == "trade":
@@ -61,16 +60,16 @@ def ao_receber_mensagem(ws, mensagem):
         print(f"Erro ao processar mensagem: {e}")
 
 
-def erro(ws, erro):
+def erro(_ws, error):
    print('Deu erro:')
-   print(erro)
+   print(error)
 
 
 if __name__ == '__main__':
-    ws = websocket.WebSocketApp("wss://ws.bitstamp.net",
+    ws_app = websocket.WebSocketApp("wss://ws.bitstamp.net",
                                 on_open=ao_abrir ,
                                 on_close=ao_fechar ,
                                 on_error=erro ,
                                 on_message=ao_receber_mensagem)
 
-    ws.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE})
+    ws_app.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE})
